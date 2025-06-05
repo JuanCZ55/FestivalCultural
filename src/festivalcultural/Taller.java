@@ -53,5 +53,10 @@ public class Taller {
     public void setLugar(String lugar) {
         this.lugar = lugar;
     }
+
+    @Override
+    public String toString() {
+        return "Taller: "+ nombre + ", Inicia: " + horaInicio + ", Termina:" + horaFin + ", Lugar:" + lugar ;
+    }
     
 }
