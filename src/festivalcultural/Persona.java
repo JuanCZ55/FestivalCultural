@@ -12,11 +12,12 @@ import java.util.HashSet;
  */
 public class Persona {
 
-    private HashSet<Taller> talleres = new HashSet<>();
+    private HashSet<Taller> talleres;
     private String nombre;
 
     public Persona(String nombre) {
         this.nombre = nombre;
+        talleres = new HashSet<>();
     }
 
     public HashSet<Taller> getTalleres() {
