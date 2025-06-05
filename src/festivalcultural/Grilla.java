@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Set;
 
 /**
@@ -56,12 +57,123 @@ public class Grilla {
         return false;
     }
 
+    /**
+     * *menu para Agregar un taller a una persona
+     *
+     * @author Juan Cruz Zegarra
+     * @param person objeto de tipo persona
+     */
+    public void menu1(Persona person, Scanner scan) {
+        System.out.println("¿Que taller desea hacer?");
+        int i = 0;
+        if (talleres.isEmpty()) {
+            System.out.println("No hay talleres");
+            return;
+        }
+        for (Taller tallere : talleres) {
+            System.out.println(i + "-" + tallere);
+            i++;
+
+        }
+        int eleccion = scan.nextInt();
+        while (eleccion < 0 || eleccion >= talleres.size()) {
+            System.out.println("Ingrese un numero valido");
+            i = 0;
+            for (Taller tallere : talleres) {
+                System.out.println(i + "-" + tallere);
+                i++;
+
+            }
+            eleccion = scan.nextInt();
+        }
+        Taller elegido = talleres.get(eleccion);
+        if (tallerRequeridoPersona(elegido.getNombre(), person)) {
+            person.addTaller(elegido);
+            System.out.println("Te Incribiste Correctamente a " + elegido.getNombre());
+            System.out.println("Queda en : " + elegido.getLugar());
+            System.out.println("Empieza: " + elegido.getHoraInicio() + "Termina: " + elegido.getHoraFin());
+        } else {
+            ArrayList<Taller> requeridos = talleresRequeridosAntes(elegido.getNombre());
+            requeridos.removeAll(person.getTalleres());
+            System.out.println("Te faltan realizar estos talleres primero: ");
+            imprimirListaTalleres(requeridos);
+        }
+
+    }
+
+    /**
+     * menu para saber que talleres necesita hacer previamente
+     *
+     * @author Juan Cruz Zegarra
+     * @param scan
+     */
+    public void menu3(Scanner scan) {
+        System.out.println("Elegi un taller");
+        int i = 0;
+        if (talleres.isEmpty()) {
+            System.out.println("No hay talleres");
+            return;
+        }
+        for (Taller tallere : talleres) {
+            System.out.println(i + "-" + tallere);
+            i++;
+        }
+        int eleccion = scan.nextInt();
+        while (eleccion < 0 || eleccion >= talleres.size()) {
+            System.out.println("Ingrese un numero valido");
+            i = 0;
+            for (Taller tallere : talleres) {
+                System.out.println(i + "-" + tallere);
+                i++;
+            }
+            eleccion = scan.nextInt();
+        }
+        Taller elegido = talleres.get(eleccion);
+
+        System.out.println("Para hacer el taller " + elegido.getNombre() + " necesitas hacer estos:");
+        ArrayList<Taller> requeridos = talleresRequeridosAntes(elegido.getNombre());
+        imprimirListaTalleres(requeridos);
+
+    }
+
+    public boolean tallerRequeridoPersona(String nombre, Persona person) {
+        if (nombre == null || nombre.equals("")) {
+            System.out.println("Tu eleccion es erronea");
+            return false;
+        }
+        if (person == null) {
+            System.out.println("Error con persona");
+            return false;
+        }
+        ArrayList<Taller> requeridos = talleresRequeridosAntes(nombre);
+        if (person.getTalleres().containsAll(requeridos)) {
+            //System.out.println("Puedes realizar el taller: " + nombre);
+            return true;
+        } else {
+            //requeridos.removeAll(person.getTalleres());
+            //System.out.println("Te faltan realizar estos: ");
+            //imprimirListaTalleres(requeridos);
+            return false;
+        }
+    }
+
+    public void imprimirListaTalleres(ArrayList<Taller> lista) {
+        if (lista == null || lista.isEmpty()) {
+            System.out.println("No hay talleres en la lista.");
+            return;
+        }
+
+        for (Taller t : lista) {
+            System.out.println("- " + t.getNombre());
+        }
+    }
+
     public ArrayList<Taller> talleresRequeridosAntes(String nombre) {
         Taller tal = buscarTallerXNombre(nombre);
 
         if (tal == null) {
             System.out.println("El taller " + nombre + " no esta cargado en el sistema");
-            return null;
+            return new ArrayList<>();
         }
         HashSet<String> visitados = new HashSet<>();
         ArrayList<Taller> resultado = new ArrayList<>();
@@ -69,7 +181,10 @@ public class Grilla {
         auxRecuTRA(tal, visitados, resultado);
 
         resultado.remove(tal);//quito el taller que se le pasa
-
+        //si esta al dia con los talleres no necesita ningun otro
+        if (resultado.size() == 0) {
+            System.out.println("No requeris ningun taller previo, para hacer " + nombre);
+        }
         return resultado;
 
     }
