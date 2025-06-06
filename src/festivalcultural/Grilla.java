@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -242,5 +243,110 @@ public class Grilla {
             }
         }
     }
+    
+    public boolean puedeHacerDosActividades(Persona persona, String nombreOne, String nombreTwo) {
+        Persona person = persona;
+        Taller tOne = buscarTallerXNombre(nombreOne);
+        Taller tTwo = buscarTallerXNombre(nombreTwo);
+        if (!Objects.nonNull(tOne) || !Objects.nonNull(tTwo)) {
+            System.out.println("Uno de los talleres no existe");
+            return false;
+        }
+        ArrayList<Taller> listaNecesitoTOne = talleresRequeridosAntesSec(tOne.getNombre()); // Talleres que necesito para hacer tOne
+        ArrayList<Taller> listaNecesitoTTwo = talleresRequeridosAntesSec(tTwo.getNombre()); // Talleres que necesito para hacer tTwo
+        if (tOne.getHoraFin().isBefore(tTwo.getHoraInicio())) {
+            if(person.getTalleres().containsAll(listaNecesitoTOne) && person.getTalleres().containsAll(listaNecesitoTTwo)){
+                System.out.println("Puede hacer ambas actividades");
+                return true;
+            }
+            if (person.getTalleres().containsAll(listaNecesitoTOne)){ 
+                if (!person.getTalleres().contains(tOne)) {
+                    person.getTalleres().add(tOne);
+                }
+                if (person.getTalleres().containsAll(listaNecesitoTTwo)) {
+                    System.out.println("Puedes hacer el primer taller, y luego hacer el segundo");
+                    return true;
+                } else { 
+                    System.out.println("Únicamente puede hacer el primer taller");
+                    return false;
+                }
+            }else if (person.getTalleres().containsAll(listaNecesitoTTwo)) { 
+                System.out.println("Puede hacer el segundo taller, pero no el primero");
+                return false;
+            }else{ 
+                System.out.println("No puede hacer ninguno de los dos talleres");
+                return false;
+            }
+        } else if (tTwo.getHoraFin().isBefore(tOne.getHoraInicio())){
+            if(person.getTalleres().containsAll(listaNecesitoTOne) && person.getTalleres().containsAll(listaNecesitoTTwo)){
+                System.out.println("Puede hacer ambas actividades");
+                return true;
+            }
+            if (person.getTalleres().containsAll(listaNecesitoTTwo)){
+                if (!person.getTalleres().contains(tTwo)) {
+                    person.getTalleres().add(tTwo);
+                }
+                if (person.getTalleres().containsAll(listaNecesitoTOne)) {
+                System.out.println("Puedes hacer el segundo taller, y luego hacer el primero");
+                return true;
+                }else {
+                    System.out.println("Únicamente puede hacer el segundo taller");
+                    return false;
+                }
+                } if (person.getTalleres().containsAll(listaNecesitoTOne)){
+                    System.out.println("Puede hacer el primer taller, pero no el segundo");
+                    return false;
+                }
+                System.out.println("No puede hacer ninguno de los dos talleres");
+                return false;
+            }
+            System.out.println("Los talleres se superponen");
+            if (person.getTalleres().containsAll(listaNecesitoTOne)) {
+                System.out.println(" - Puede hacer el primer taller, pero no el segundo");
+            } else if (person.getTalleres().containsAll(listaNecesitoTTwo)) {
+                System.out.println(" - Puede hacer el segundo taller, pero no el primero");
+            } else {
+                System.out.println(" - No puede hacer ninguno de los dos talleres");
+            }
+
+        
+        return false;
+    }
+
+
+    private ArrayList<Taller> talleresRequeridosAntesSec(String nombre) {
+        Taller tal = buscarTallerXNombre(nombre);
+        if (tal == null) {
+            System.out.println("El taller " + nombre + " no está cargado en el sistema");
+            return null;
+        }
+        HashSet<String> visitados = new HashSet<>();
+        ArrayList<Taller> resultado = new ArrayList<>();
+        auxRecuTRASec(tal, visitados, resultado);
+        resultado.remove(tal);  // Asegura que no incluya el mismo taller
+        return resultado;
+    }
+
+
+    private void auxRecuTRASec(Taller taller, HashSet<String> visitados, ArrayList<Taller> resultado) {
+        if (visitados.contains(taller.getNombre())) {
+            return;
+        }
+        visitados.add(taller.getNombre());
+        for (Dependencia dep : dependencias) {
+            if (dep.getTallerTwo().equals(taller)) {
+                System.out.println("Dependencia detectada: " + dep.getTallerOne().getNombre() + " → " + dep.getTallerTwo().getNombre());
+
+                Taller previo = dep.getTallerOne();
+                auxRecuTRASec(previo, visitados, resultado);
+
+                // Solo agregar si no es igual al taller original
+                if (!resultado.contains(previo)) {
+                    resultado.add(previo);
+                }
+            }
+        }
+    }
+
 
 }
