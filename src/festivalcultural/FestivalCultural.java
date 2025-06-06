@@ -54,7 +54,7 @@ public class FestivalCultural {
                 System.out.println("1-Inscribirse en un taller");
                 System.out.println("2-Consulta sobre 2 tallers");
                 System.out.println("3-Talleres Previos");
-                System.out.println("4-Talleres Dependientes");
+                System.out.println("4-Talleres Siguientes");
                 System.out.println("5-Volver");
                 System.out.println("6-Salir");
                 var = scan.nextInt();
@@ -70,7 +70,8 @@ public class FestivalCultural {
                         gr.menu3(scan);
                         break;
                     case 4:
-
+                        // TODO talleres siguientes, vecindad derecha extendida
+                        // gr.buscarTalleresSiguientesATaller(taller); falta terminar menu, y ver si funciona
                         break;
                     case 5:
 

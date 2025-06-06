@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -220,4 +221,26 @@ public class Grilla {
         }
         return null;
     }
+
+    public String buscarTalleresSiguientesATaller(Taller tallerInicial) {
+        Set<Taller> visitados = new HashSet<>();
+        buscarTalleres(tallerInicial, visitados);
+        visitados.remove(tallerInicial);
+
+        return visitados.stream()
+                .map(Taller::getNombre)
+                .collect(Collectors.joining(","));
+    }
+
+    private void buscarTalleres(Taller actual, Set<Taller> visitados) {
+        for (Dependencia d : dependencias) {
+            if (d.getTallerOne().equals(actual)) {
+                Taller siguiente = d.getTallerTwo();
+                if (visitados.add(siguiente)) {
+                    buscarTalleres(siguiente, visitados);
+                }
+            }
+        }
+    }
+
 }
