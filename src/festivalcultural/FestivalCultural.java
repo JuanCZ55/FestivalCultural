@@ -64,7 +64,7 @@ public class FestivalCultural {
                         gr.menu1(list.get(eleccion), scan);
                         break;
                     case 2:
-
+                        gr.caseDos(list.get(eleccion), gr.getTalleres(), scan);
                         break;
                     case 3:
                         gr.menu3(scan);
@@ -86,5 +86,6 @@ public class FestivalCultural {
         } while (true);
 
     }
+
 
 }

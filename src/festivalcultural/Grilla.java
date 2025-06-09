@@ -244,6 +244,20 @@ public class Grilla {
         }
     }
     
+    /**
+     * Verifica si una persona puede realizar dos talleres en función de sus horarios
+     * y de los requisitos previos necesarios para cada taller.
+     * 
+     * Si los horarios no se superponen y la persona ha cumplido con los requisitos
+     * previos de ambos talleres para ver si puede hacer ambos, uno o ninguno.
+     *
+     * @param persona    Persona que desea realizar los talleres.
+     * @param nombreOne  Nombre del primer taller.
+     * @param nombreTwo  Nombre del segundo taller.
+     * @return true si puede hacer ambos talleres (en cualquier orden válido), false en caso contrario.
+     * 
+     * @author Ariel Ismael Miranda Salmin
+     */
     public boolean puedeHacerDosActividades(Persona persona, String nombreOne, String nombreTwo) {
         Persona person = persona;
         Taller tOne = buscarTallerXNombre(nombreOne);
@@ -313,6 +327,99 @@ public class Grilla {
         return false;
     }
 
+    /**
+     * Muestra un menú para que el usuario seleccione dos talleres y consulta si la persona
+     * puede realizarlos ambos
+     *
+     * @param persona Persona que desea consultar sobre los talleres.
+     * @param lista   Lista de talleres disponibles.
+     * @param scan    Objeto Scanner para entrada por teclado.
+     * 
+     * @author Ariel Ismael Miranda Salmin
+     */
+    public void caseDos(Persona persona, ArrayList<Taller> lista, Scanner scan){
+        ArrayList <Taller> talleres = new ArrayList<>(lista);
+        if (talleres.size()<2){
+            System.out.println("No hay talleres suficientes para hacer la consulta");
+            return;
+        }
+
+        Taller[] selec = new Taller[2];
+
+        System.out.println("Seleccione dos talleres, para ver si se pueden realizar:");
+        
+        int resul;
+
+        // Seleccionar el primer taller
+        do {
+            System.out.println("Primer taller: ");
+            resul = seleccionarTaller(talleres, scan);
+            if (resul>=0){
+                selec[0] = talleres.get(resul);
+                talleres.remove(resul);
+            }
+        } while (resul == -2);
+
+        if (resul == -1 || selec[0] == null) {
+            System.out.println("Se cancelara la seleccion");
+            return;
+        }
+
+        // Seleccionar el segundo taller
+        do {
+            System.out.println("Segundo taller: ");
+            resul = seleccionarTaller(talleres, scan);
+            if (resul>=0){
+                selec[1] = talleres.get(resul);
+                talleres.remove(resul);
+            }
+        } while (resul == -2 || resul !=-1);
+
+        if (Objects.nonNull(selec[1])) {
+            puedeHacerDosActividades(persona, selec[0].getNombre(), selec[1].getNombre());
+        }else{
+            System.out.println("Se cancelara la seleccion");
+        }
+    };
+
+
+    /**
+     * Muestra una lista de talleres disponibles y permite uno o cancelar la selección
+     *
+     * @param lista Lista de talleres a mostrar.
+     * @param scan  Objeto Scanner para la entrada del usuario.
+     * @return índice del taller seleccionado, -1 si se selecciona "Salir", -2 si la entrada es inválida.
+     * 
+     * @author Ariel Ismael Miranda Salmin
+     */
+    public int seleccionarTaller(ArrayList<Taller> lista, Scanner scan){
+        try {
+            int i = 0;
+            for (Taller taller : lista) {
+                System.out.println(i+"_ "+ taller.toString());
+                i++;
+            }
+            System.out.println(i+"_ Salir");
+            int valor = Integer.parseInt(scan.nextLine());
+            if (valor > i || valor < 0) {
+                System.out.println("Seleccione una de las opciones");
+                return -2;
+            } else if (valor==i){
+                return -1;
+            } else {
+                return valor;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("No es un número válido.");
+            return -2;
+        }
+    };
+
+
+
+    public ArrayList<Taller> getTalleres() {
+        return talleres;
+    }
 
     private ArrayList<Taller> talleresRequeridosAntesSec(String nombre) {
         Taller tal = buscarTallerXNombre(nombre);
@@ -347,6 +454,7 @@ public class Grilla {
             }
         }
     }
+
 
 
 }
