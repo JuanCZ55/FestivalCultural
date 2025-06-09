@@ -46,10 +46,7 @@ public class Grilla {
             Dependencia depen = new Dependencia(origen, destino, distancia);
             return dependencias.add(depen);
         }
-        if (distancia < 0) {
-            System.out.println("Ingresea una distancia mayor a 0");
-            return false;
-        }
+        
         if (origen == null) {
             System.out.println("El taller " + one + " no existe, agregalo");
         }
