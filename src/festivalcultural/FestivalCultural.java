@@ -88,9 +88,7 @@ public class FestivalCultural {
                             gr.menu3(scan);
                             break;
                         case 4:
-                            // TODO talleres siguientes, vecindad derecha extendida
-                            // gr.buscarTalleresSiguientesATaller(taller); falta terminar menu, y ver si
-                            // funciona
+                             gr.menu4(scan);
                             break;
                         case 5:
 

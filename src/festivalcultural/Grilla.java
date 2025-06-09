@@ -220,14 +220,11 @@ public class Grilla {
         return null;
     }
 
-    public String buscarTalleresSiguientesATaller(Taller tallerInicial) {
+    public ArrayList<Taller> buscarTalleresSiguientesATaller(Taller tallerInicial) {
         Set<Taller> visitados = new HashSet<>();
         buscarTalleres(tallerInicial, visitados);
         visitados.remove(tallerInicial);
-
-        return visitados.stream()
-                .map(Taller::getNombre)
-                .collect(Collectors.joining(","));
+        return new ArrayList<>(visitados);
     }
 
     private void buscarTalleres(Taller actual, Set<Taller> visitados) {
@@ -453,6 +450,35 @@ public class Grilla {
 
     public ArrayList<Dependencia> getDependencias() {
         return dependencias;
+    }
+
+    /** Menu para seleccionar un taller y a partir de ese taller ver que mas se puede hacer **/
+    public void menu4(Scanner scan) {
+        System.out.println("Elegi un taller");
+        int i = 0;
+        if (talleres.isEmpty()) {
+            System.out.println("No hay talleres");
+            return;
+        }
+        for (Taller tallere : talleres) {
+            System.out.println(i + "-" + tallere);
+            i++;
+        }
+        int eleccion = scan.nextInt();
+        while (eleccion < 0 || eleccion >= talleres.size()) {
+            System.out.println("Ingrese un numero valido");
+            i = 0;
+            for (Taller tallere : talleres) {
+                System.out.println(i + "-" + tallere);
+                i++;
+            }
+            eleccion = scan.nextInt();
+        }
+        Taller elegido = talleres.get(eleccion);
+
+        System.out.println("A partir de este taller " + elegido.getNombre() + " usted puede hacer estos:");
+        ArrayList<Taller> siguientes =  buscarTalleresSiguientesATaller(elegido);
+        imprimirListaTalleres(siguientes);
     }
 
 
