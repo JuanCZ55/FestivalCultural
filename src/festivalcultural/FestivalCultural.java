@@ -6,6 +6,7 @@ package festivalcultural;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Scanner;
 
 /**
@@ -18,21 +19,32 @@ public class FestivalCultural {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        Menu menu = new Menu();
         Grilla gr = new Grilla();
         Persona susan = new Persona("Susan");
         Persona filipo = new Persona("Filipo");
         ArrayList<Persona> list = new ArrayList<>();
         list.add(susan);
         list.add(filipo);
+        // Ejemplos de entrada de talleres
+        gr.addTaller("Pintura", LocalTime.of(10, 0), LocalTime.of(12, 0), "Aula 1");
+        gr.addTaller("Danza", LocalTime.of(12, 30), LocalTime.of(14, 0), "Aula 2");
+        gr.addTaller("Teatro", LocalTime.of(15, 0), LocalTime.of(17, 0), "Aula 3");
+        gr.addTaller("Fotografía", LocalTime.of(9, 0), LocalTime.of(11, 0), "Aula 4");
+        gr.addTaller("Música", LocalTime.of(11, 30), LocalTime.of(13, 0), "Aula 5");
 
         Scanner scan = new Scanner(System.in);
         int i = 0;
         int eleccion = 0;
         int var = 0;
+        String resAdmin;
         do {
-            System.out.println("Eliga una persona");
+            resAdmin = menu.menuAdmin(list, gr, scan);
+        } while (resAdmin != "7");
 
+        do {
             do {
+                System.out.println("Eliga una persona");
                 for (Persona persona : list) {
                     System.out.println(i + "-" + persona.getNombre());
                     i++;
@@ -47,6 +59,7 @@ public class FestivalCultural {
                     System.out.println("Ingrese un opcion valida");
                 }
             } while (eleccion < 0 || eleccion > i);
+            // Posible if para administracion.
             do {
                 System.out.println("--------------------------------------------------------------------");
 
@@ -71,7 +84,8 @@ public class FestivalCultural {
                         break;
                     case 4:
                         // TODO talleres siguientes, vecindad derecha extendida
-                        // gr.buscarTalleresSiguientesATaller(taller); falta terminar menu, y ver si funciona
+                        // gr.buscarTalleresSiguientesATaller(taller); falta terminar menu, y ver si
+                        // funciona
                         break;
                     case 5:
 
@@ -86,6 +100,5 @@ public class FestivalCultural {
         } while (true);
 
     }
-
 
 }
