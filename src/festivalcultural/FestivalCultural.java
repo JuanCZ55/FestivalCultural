@@ -57,8 +57,9 @@ public class FestivalCultural {
                     System.out.println("Ingrese un opcion valida");
 
                 }
-                i = 0;
             } while (eleccion < -1 || eleccion > i);
+                            i = 0;
+
             // Posible if para administracion.
             if (eleccion == -1) {
                 do {
