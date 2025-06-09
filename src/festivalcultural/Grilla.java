@@ -446,13 +446,16 @@ public class Grilla {
 
                 Taller previo = dep.getTallerOne();
                 auxRecuTRASec(previo, visitados, resultado);
-
                 // Solo agregar si no es igual al taller original
                 if (!resultado.contains(previo)) {
                     resultado.add(previo);
                 }
             }
         }
+    }
+
+    public ArrayList<Dependencia> getDependencias() {
+        return dependencias;
     }
 
 
