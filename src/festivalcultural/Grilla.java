@@ -153,10 +153,13 @@ public class Grilla {
             eleccion = scan.nextInt();
         }
         Taller elegido = talleres.get(eleccion);
-
-        System.out.println("Para hacer el taller " + elegido.getNombre() + " necesitas hacer estos:");
         ArrayList<Taller> requeridos = talleresRequeridosAntes(elegido.getNombre());
-        imprimirListaTalleres(requeridos);
+
+        if (requeridos.size() > 0) {
+
+            System.out.println("Para hacer el taller " + elegido.getNombre() + " necesitas hacer estos:");
+            imprimirListaTalleres(requeridos);
+        }
 
     }
 
@@ -199,7 +202,6 @@ public class Grilla {
      */
     public void imprimirListaTalleres(ArrayList<Taller> lista) {
         if (lista == null || lista.isEmpty()) {
-            System.out.println("No hay talleres en la lista.");
             return;
         }
 
@@ -285,8 +287,8 @@ public class Grilla {
         return null;
     }
 
-     /*----------------------------------------------------------------------------------------*/
     /*----------------------------------------------------------------------------------------*/
+ /*----------------------------------------------------------------------------------------*/
     /**
      * Verifica si una persona puede realizar dos talleres en función de sus
      * horarios y de los requisitos previos necesarios para cada taller.
@@ -368,14 +370,13 @@ public class Grilla {
         } else {
             System.out.println(" - No puede hacer ninguno de los dos talleres");
         }
-        
+
         return false;
     }
-    
-    
+
     /**
-     * talleresRequeridosAntesSec(): Obtiene la lista de talleres requeridos antes
-     * de uno dado. Metodo modificado de talleresRequeridosAntes():
+     * talleresRequeridosAntesSec(): Obtiene la lista de talleres requeridos
+     * antes de uno dado. Metodo modificado de talleresRequeridosAntes():
      *
      * @param nombre nombre del taller a consultar
      * @return lista de talleres que deben realizarse antes del taller indicado
@@ -394,8 +395,7 @@ public class Grilla {
         resultado.remove(tal);  // Asegura que no incluya el mismo taller
         return resultado;
     }
-    
-    
+
     private void auxRecuTRASec(Taller taller, HashSet<String> visitados, ArrayList<Taller> resultado) {
         if (visitados.contains(taller.getNombre())) {
             return;
@@ -414,8 +414,7 @@ public class Grilla {
             }
         }
     }
-    
-    
+
     /**
      * Muestra un menú para que el usuario seleccione dos talleres y consulta si
      * la persona puede realizarlos ambos
@@ -432,13 +431,13 @@ public class Grilla {
             System.out.println("\nNo hay talleres suficientes para hacer la consulta");
             return;
         }
-        
+
         Taller[] selec = new Taller[2];
-        
+
         System.out.println("Seleccione dos talleres, para ver si se pueden realizar:");
-        
+
         int resul;
-        
+
         // Seleccionar el primer taller
         do {
             System.out.println("\nPrimer taller: ");
@@ -448,12 +447,12 @@ public class Grilla {
                 talleres.remove(resul);
             }
         } while (resul == -2);
-        
+
         if (resul == -1 || selec[0] == null) {
             System.out.println("\nSe cancelara la seleccion");
             return;
         }
-        
+
         // Seleccionar el segundo taller
         do {
             System.out.println("\nSegundo taller: ");
@@ -462,14 +461,16 @@ public class Grilla {
                 selec[1] = talleres.get(resul);
                 talleres.remove(resul);
             }
-        } while (resul == -2 || resul != -1);
-        
+        } while (resul == -2);
+
         if (Objects.nonNull(selec[1])) {
             puedeHacerDosActividades(persona, selec[0].getNombre(), selec[1].getNombre());
         } else {
             System.out.println("\nSe cancelara la seleccion");
         }
-    };
+    }
+
+    ;
 
 
     /**
@@ -489,7 +490,7 @@ public class Grilla {
                 i++;
             }
             System.out.println(i + "_ Salir");
-            int valor = Integer.parseInt(scan.nextLine());
+            int valor = scan.nextInt();
             if (valor > i || valor < 0) {
                 System.out.println("Seleccione una de las opciones");
                 return -2;
@@ -503,6 +504,7 @@ public class Grilla {
             return -2;
         }
     }
+
     ;
 
     public ArrayList<Taller> getTalleres() {
@@ -512,41 +514,46 @@ public class Grilla {
     public ArrayList<Dependencia> getDependencias() {
         return dependencias;
     }
-   
- /*----------------------------------------------------------------------------------------*/
-    /*----------------------------------------------------------------------------------------*/
-/**
- * Esta funcion busca todos los talleres que dependen de un taller dado
- * El funcionamiento de este metodo es simple, a partir de un taller que el usuario selecciona
- * se llama a buscarTalleres, al cual se le pasa el taller seleccionado y un Set de talleres vacio
- * el buscarTalleres, lo que hace es iterar sobre la lista de  dependencias hasta encontrar el taller actual,
- * una vez que lo encuentra, se saca el taller a donde apunta el arco (ya que las dependencias son los arcos)
- * se agrega este taller al set de visitados y se llama recursivamente a la funcion con este nuevo taller
- * una ves que finalizo, removemos el taller inicial del SET, ya que no nos interesa y luego transformamos el set
- * en una lista para poder iterar sobre el listado y mostrarlo
- * @param tallerInicial taller al cual voy a fijarme que otros talleres dependen del mismo
- * **/
-public ArrayList<Taller> buscarTalleresSiguientesATaller(Taller tallerInicial) {
-    Set<Taller> visitados = new HashSet<>();
-    buscarTalleres(tallerInicial, visitados);
-    visitados.remove(tallerInicial);
-    return new ArrayList<>(visitados);
-}
 
-private void buscarTalleres(Taller actual, Set<Taller> visitados) {
-    for (Dependencia d : dependencias) {
-        if (d.getTallerOne().equals(actual)) {
-            Taller siguiente = d.getTallerTwo();
-            if (visitados.add(siguiente)) {
-                buscarTalleres(siguiente, visitados);
+    /*----------------------------------------------------------------------------------------*/
+ /*----------------------------------------------------------------------------------------*/
+    /**
+     * Esta funcion busca todos los talleres que dependen de un taller dado El
+     * funcionamiento de este metodo es simple, a partir de un taller que el
+     * usuario selecciona se llama a buscarTalleres, al cual se le pasa el
+     * taller seleccionado y un Set de talleres vacio el buscarTalleres, lo que
+     * hace es iterar sobre la lista de dependencias hasta encontrar el taller
+     * actual, una vez que lo encuentra, se saca el taller a donde apunta el
+     * arco (ya que las dependencias son los arcos) se agrega este taller al set
+     * de visitados y se llama recursivamente a la funcion con este nuevo taller
+     * una ves que finalizo, removemos el taller inicial del SET, ya que no nos
+     * interesa y luego transformamos el set en una lista para poder iterar
+     * sobre el listado y mostrarlo
+     *
+     * @param tallerInicial taller al cual voy a fijarme que otros talleres
+     * dependen del mismo
+ * *
+     */
+    public ArrayList<Taller> buscarTalleresSiguientesATaller(Taller tallerInicial) {
+        Set<Taller> visitados = new HashSet<>();
+        buscarTalleres(tallerInicial, visitados);
+        visitados.remove(tallerInicial);
+        return new ArrayList<>(visitados);
+    }
+
+    private void buscarTalleres(Taller actual, Set<Taller> visitados) {
+        for (Dependencia d : dependencias) {
+            if (d.getTallerOne().equals(actual)) {
+                Taller siguiente = d.getTallerTwo();
+                if (visitados.add(siguiente)) {
+                    buscarTalleres(siguiente, visitados);
+                }
             }
         }
     }
-}
 
-
-/**
- * Menu para seleccionar un taller y a partir de ese taller ver que mas se
+    /**
+     * Menu para seleccionar un taller y a partir de ese taller ver que mas se
      * puede hacer *
      */
     public void menu4(Scanner scan) {
