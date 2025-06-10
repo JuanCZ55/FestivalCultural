@@ -81,6 +81,128 @@ public class Grilla {
         return false;
     }
 
+
+    /**
+     * tallerRequeridoPersona(): Verifica si una persona cumple con los talleres
+     * requeridos antes de hacer uno nuevo.
+     *
+     * @param nombre nombre del taller que se desea realizar
+     * @param person persona que desea realizar el taller
+     * @return true si la persona cumple con todos los talleres requeridos,
+     * false en caso contrario
+     * @author Juan Cruz Zegarra
+     */
+    public boolean tallerRequeridoPersona(String nombre, Persona person) {
+        if (nombre == null || nombre.equals("")) {
+            System.out.println("Tu eleccion es erronea");
+            return false;
+        }
+        if (person == null) {
+            System.out.println("Error con persona");
+            return false;
+        }
+        ArrayList<Taller> requeridos = talleresRequeridosAntes(nombre);
+        if (person.getTalleres().containsAll(requeridos)) {
+            return true;
+        } else {
+           
+            return false;
+        }
+    }
+
+
+    /**
+     * talleresRequeridosAntes(): Obtiene la lista de talleres requeridos antes
+     * de uno dado.
+     *
+     * @param nombre nombre del taller a consultar
+     * @return lista de talleres que deben realizarse antes del taller indicado
+     * @author Juan Cruz Zegarra
+     */
+    public ArrayList<Taller> talleresRequeridosAntes(String nombre) {
+        Taller tal = buscarTallerXNombre(nombre);
+
+        if (tal == null) {
+            System.out.println("El taller " + nombre + " no esta cargado en el sistema");
+            return new ArrayList<>();
+        }
+        HashSet<String> visitados = new HashSet<>();
+        ArrayList<Taller> resultado = new ArrayList<>();
+
+        auxRecuTRA(tal, visitados, resultado);
+
+        resultado.remove(tal);//quito el taller que se le pasa
+        //si esta al dia con los talleres no necesita ningun otro
+        if (resultado.size() == 0) {
+            System.out.println("No requeris ningun taller previo, para hacer " + nombre);
+        }
+        return resultado;
+
+    }
+
+    private void auxRecuTRA(Taller taller, HashSet<String> visitados, ArrayList<Taller> resultado) {
+        if (visitados.contains(taller.getNombre())) {
+            return;
+        }
+        visitados.add(taller.getNombre());
+        for (Dependencia dep : dependencias) {
+            if (dep.getTallerTwo().equals(taller)) {
+                Taller previo = dep.getTallerOne();
+                auxRecuTRA(previo, visitados, resultado);
+            }
+        }
+        resultado.add(taller);
+    }
+
+    /**
+     * buscarTallerXNombre(): Busca un taller en la lista por su nombre.
+     *
+     * @param nombre nombre del taller a buscar
+     * @return el taller encontrado o null si no existe
+     * @author Juan Cruz Zegarra
+     */
+    private Taller buscarTallerXNombre(String nombre) {
+        for (Taller tallere : talleres) {
+            if (tallere.getNombre().equals(nombre)) {
+                return tallere;
+            }
+        }
+        return null;
+    }
+
+    
+    /**
+     * imprimirListaTalleres(): Imprime los nombres de los talleres en la lista.
+     *
+     * @param lista lista de talleres a imprimir
+     * @author Juan Cruz Zegarra
+     */
+    public void imprimirListaTalleres(ArrayList<Taller> lista) {
+        if (lista == null || lista.isEmpty()) {
+            return;
+        }
+
+        for (Taller t : lista) {
+            System.out.println("- " + t.getNombre());
+        }
+    }
+    /**
+     * buscarArcoXNombre(): Busca una dependencia entre dos talleres
+     * especificos.
+     *
+     * @param one taller origen de la dependencia
+     * @param two taller destino de la dependencia
+     * @return la dependencia encontrada o null si no existe
+     * @author Juan Cruz Zegarra
+     */
+    private Dependencia buscarArcoXNombre(Taller one, Taller two) {
+        for (Dependencia depen : dependencias) {
+            if (depen.getTallerOne().equals(one) && depen.getTallerTwo().equals(two)) {
+                return depen;
+            }
+        }
+        return null;
+    }
     /**
      * *menu para Agregar un taller a una persona
      *
@@ -161,130 +283,6 @@ public class Grilla {
             imprimirListaTalleres(requeridos);
         }
 
-    }
-
-    /**
-     * tallerRequeridoPersona(): Verifica si una persona cumple con los talleres
-     * requeridos antes de hacer uno nuevo.
-     *
-     * @param nombre nombre del taller que se desea realizar
-     * @param person persona que desea realizar el taller
-     * @return true si la persona cumple con todos los talleres requeridos,
-     * false en caso contrario
-     * @author Juan Cruz Zegarra
-     */
-    public boolean tallerRequeridoPersona(String nombre, Persona person) {
-        if (nombre == null || nombre.equals("")) {
-            System.out.println("Tu eleccion es erronea");
-            return false;
-        }
-        if (person == null) {
-            System.out.println("Error con persona");
-            return false;
-        }
-        ArrayList<Taller> requeridos = talleresRequeridosAntes(nombre);
-        if (person.getTalleres().containsAll(requeridos)) {
-            //System.out.println("Puedes realizar el taller: " + nombre);
-            return true;
-        } else {
-            //requeridos.removeAll(person.getTalleres());
-            //System.out.println("Te faltan realizar estos: ");
-            //imprimirListaTalleres(requeridos);
-            return false;
-        }
-    }
-
-    /**
-     * imprimirListaTalleres(): Imprime los nombres de los talleres en la lista.
-     *
-     * @param lista lista de talleres a imprimir
-     * @author Juan Cruz Zegarra
-     */
-    public void imprimirListaTalleres(ArrayList<Taller> lista) {
-        if (lista == null || lista.isEmpty()) {
-            return;
-        }
-
-        for (Taller t : lista) {
-            System.out.println("- " + t.getNombre());
-        }
-    }
-
-    /**
-     * talleresRequeridosAntes(): Obtiene la lista de talleres requeridos antes
-     * de uno dado.
-     *
-     * @param nombre nombre del taller a consultar
-     * @return lista de talleres que deben realizarse antes del taller indicado
-     * @author Juan Cruz Zegarra
-     */
-    public ArrayList<Taller> talleresRequeridosAntes(String nombre) {
-        Taller tal = buscarTallerXNombre(nombre);
-
-        if (tal == null) {
-            System.out.println("El taller " + nombre + " no esta cargado en el sistema");
-            return new ArrayList<>();
-        }
-        HashSet<String> visitados = new HashSet<>();
-        ArrayList<Taller> resultado = new ArrayList<>();
-
-        auxRecuTRA(tal, visitados, resultado);
-
-        resultado.remove(tal);//quito el taller que se le pasa
-        //si esta al dia con los talleres no necesita ningun otro
-        if (resultado.size() == 0) {
-            System.out.println("No requeris ningun taller previo, para hacer " + nombre);
-        }
-        return resultado;
-
-    }
-
-    private void auxRecuTRA(Taller taller, HashSet<String> visitados, ArrayList<Taller> resultado) {
-        if (visitados.contains(taller.getNombre())) {
-            return;
-        }
-        visitados.add(taller.getNombre());
-        for (Dependencia dep : dependencias) {
-            if (dep.getTallerTwo().equals(taller)) {
-                Taller previo = dep.getTallerOne();
-                auxRecuTRA(previo, visitados, resultado);
-            }
-        }
-        resultado.add(taller);
-    }
-
-    /**
-     * buscarTallerXNombre(): Busca un taller en la lista por su nombre.
-     *
-     * @param nombre nombre del taller a buscar
-     * @return el taller encontrado o null si no existe
-     * @author Juan Cruz Zegarra
-     */
-    private Taller buscarTallerXNombre(String nombre) {
-        for (Taller tallere : talleres) {
-            if (tallere.getNombre().equals(nombre)) {
-                return tallere;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * buscarArcoXNombre(): Busca una dependencia entre dos talleres
-     * especificos.
-     *
-     * @param one taller origen de la dependencia
-     * @param two taller destino de la dependencia
-     * @return la dependencia encontrada o null si no existe
-     * @author Juan Cruz Zegarra
-     */
-    private Dependencia buscarArcoXNombre(Taller one, Taller two) {
-        for (Dependencia depen : dependencias) {
-            if (depen.getTallerOne().equals(one) && depen.getTallerTwo().equals(two)) {
-                return depen;
-            }
-        }
-        return null;
     }
 
     /*----------------------------------------------------------------------------------------*/
