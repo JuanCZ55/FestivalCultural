@@ -579,8 +579,10 @@ public class Grilla {
         }
         Taller elegido = talleres.get(eleccion);
 
-        System.out.println("A partir de este taller " + elegido.getNombre() + " usted puede hacer estos:");
+
         ArrayList<Taller> siguientes = buscarTalleresSiguientesATaller(elegido);
+        String res = siguientes.size() > 0 ? "A partir de este taller " + elegido.getNombre() + " usted puede hacer estos:" : "No se pueden hacer mas talleres";
+        System.out.println(res);
         imprimirListaTalleres(siguientes);
     }
 
