@@ -285,8 +285,17 @@ public class Grilla {
         return null;
     }
 
-    /*----------------------------------------------------------------------------------------*/
- /*----------------------------------------------------------------------------------------*/
+    /**
+     * Esta funcion busca todos los talleres que dependen de un taller dado
+     * El funcionamiento de este metodo es simple, a partir de un taller que el usuario selecciona
+     * se llama a buscarTalleres, al cual se le pasa el taller seleccionado y un Set de talleres vacio
+     * el buscarTalleres, lo que hace es iterar sobre la lista de  dependencias hasta encontrar el taller actual,
+     * una vez que lo encuentra, se saca el taller a donde apunta el arco (ya que las dependencias son los arcos)
+     * se agrega este taller al set de visitados y se llama recursivamente a la funcion con este nuevo taller
+     * una ves que finalizo, removemos el taller inicial del SET, ya que no nos interesa y luego transformamos el set
+     * en una lista para poder iterar sobre el listado y mostrarlo
+     * @param tallerInicial taller al cual voy a fijarme que otros talleres dependen del mismo
+     * **/
     public ArrayList<Taller> buscarTalleresSiguientesATaller(Taller tallerInicial) {
         Set<Taller> visitados = new HashSet<>();
         buscarTalleres(tallerInicial, visitados);
