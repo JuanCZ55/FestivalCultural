@@ -285,7 +285,8 @@ public class Grilla {
         return null;
     }
 
-    
+     /*----------------------------------------------------------------------------------------*/
+    /*----------------------------------------------------------------------------------------*/
     /**
      * Verifica si una persona puede realizar dos talleres en función de sus
      * horarios y de los requisitos previos necesarios para cada taller.
@@ -503,8 +504,17 @@ public class Grilla {
         }
     }
     ;
-    // ----------------------------------------------------------------------------------------------------------
-// ----------------------------------------------------------------------------------------------------------
+
+    public ArrayList<Taller> getTalleres() {
+        return talleres;
+    }
+
+    public ArrayList<Dependencia> getDependencias() {
+        return dependencias;
+    }
+   
+ /*----------------------------------------------------------------------------------------*/
+    /*----------------------------------------------------------------------------------------*/
 /**
  * Esta funcion busca todos los talleres que dependen de un taller dado
  * El funcionamiento de este metodo es simple, a partir de un taller que el usuario selecciona

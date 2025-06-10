@@ -23,7 +23,9 @@ public class Menu {
                     + "\n 4_ Eliminar un taller"
                     + "\n 5_ Agregar una dependecia a un taller"
                     + "\n 6_ Eliminar una dependecia a un taller"
-                    + "\n 7_ Salir");
+                    + "\n 7_ Mostar Talleres"
+                    + "\n 8_ Mostar Dependencias"
+                    + "\n 9_ Salir");
             entrada = scan.nextInt();
             switch (entrada) {
                 case 1:
@@ -45,11 +47,16 @@ public class Menu {
                     caseSeis(grila, scan);
                     break;
                 case 7:
-                    return "7";
+                    imprimirTalleres(grila);
+                    break;
+                case 8:
+                    imprimirDependencias(grila);
+                    break;
+                case 9:
+                    return "9";
             }
-            System.out.println(entrada+"ho");
-        } while (entrada != 7);
-        return "7";
+        } while (entrada != 9);
+        return "9";
     }
 
     ;
@@ -341,5 +348,26 @@ public class Menu {
         } else {
             System.out.println("No se pudo agregar la dependencia, seguro sos feo");
         }
+    }
+
+    public void imprimirTalleres(Grilla gr) {
+        System.out.println("Lista de talleres: ");
+        gr.imprimirListaTalleres(gr.getTalleres());
+        System.out.println("");
+
+    }
+
+    public void imprimirDependencias(Grilla gr) {
+        System.out.println("Lista de Dependencias: ");
+        if (gr.getDependencias().isEmpty()) {
+            System.out.println("No hay dependencias");
+        } else {
+            for (Dependencia dependencia : gr.getDependencias()) {
+                String one = dependencia.getTallerOne().getNombre();
+                String two = dependencia.getTallerTwo().getNombre();
+                System.out.println(". " + one + " --> " + two);
+            }
+        }
+        System.out.println("");
     }
 }

@@ -27,12 +27,17 @@ public class FestivalCultural {
         list.add(susan);
         list.add(filipo);
         // Ejemplos de entrada de talleres
-        gr.addTaller("Pintura", LocalTime.of(10, 0), LocalTime.of(12, 0), "Aula 1");
-        gr.addTaller("Danza", LocalTime.of(12, 30), LocalTime.of(14, 0), "Aula 2");
-        gr.addTaller("Teatro", LocalTime.of(15, 0), LocalTime.of(17, 0), "Aula 3");
-        gr.addTaller("Fotografía", LocalTime.of(9, 0), LocalTime.of(11, 0), "Aula 4");
-        gr.addTaller("Música", LocalTime.of(11, 30), LocalTime.of(13, 0), "Aula 5");
-
+        gr.addTaller("Basico de Ceramica", LocalTime.of(10, 0), LocalTime.of(12, 0), "Carpa A");
+        gr.addTaller("Avanzado de Ceramica", LocalTime.of(12, 30), LocalTime.of(14, 0), "Carpa B");
+        gr.addTaller("Pintura en Ceramica", LocalTime.of(15, 0), LocalTime.of(17, 0), "Carpa C");
+        gr.addTaller("Arte abstracta", LocalTime.of(9, 0), LocalTime.of(11, 0), "Carpa D");
+        gr.addTaller("Vitrificacion", LocalTime.of(11, 30), LocalTime.of(13, 0), "Carpa F");
+        gr.addTaller("Esculturas", LocalTime.of(13, 30), LocalTime.of(15, 45), "Carpa F");
+        gr.addDependencia("Basico de Ceramica", "Avanzado de Ceramica",18.5 );
+        gr.addDependencia("Avanzado de Ceramica", "Pintura en Ceramica",12.5);
+        gr.addDependencia("Pintura en Ceramica", "Arte abstracta",6.4);
+        gr.addDependencia("Pintura en Ceramica", "Vitrificacion",13.2);
+        gr.addDependencia("Pintura en Ceramica", "Esculturas", 9.4);
         Scanner scan = new Scanner(System.in);
         int i = 0;
         int eleccion = 0;
@@ -41,13 +46,13 @@ public class FestivalCultural {
 
         do {
             do {
-                System.out.println("-1 - Administracion");
+                System.out.println("Administracion <-1>\n");
                 System.out.println("Eliga una persona");
                 for (Persona persona : list) {
-                    System.out.println(i + "-" + persona.getNombre());
+                    System.out.println("  <"+i + ">." + persona.getNombre());
                     i++;
                 }
-                System.out.println(i + "-Salir");
+                System.out.println("\nSalir <"+i+">");
                 eleccion = scan.nextInt();
                 if (eleccion == i) {
                     System.out.println("bye bye bye");
@@ -64,20 +69,20 @@ public class FestivalCultural {
             if (eleccion == -1) {
                 do {
                     resAdmin = menu.menuAdmin(list, gr, scan);
-                } while (resAdmin != "7");
+                } while (resAdmin != "9");
             } else {
                 do {
-                    System.out.println("--------------------------------------------------------------------");
+                    System.out.println("");
 
-                    System.out.println("Eliga una opcion");
-                    System.out.println("1-Inscribirse en un taller");
-                    System.out.println("2-Consulta sobre 2 tallers");
-                    System.out.println("3-Talleres Previos");
-                    System.out.println("4-Talleres Siguientes");
-                    System.out.println("5-Volver");
-                    System.out.println("6-Salir");
+                    System.out.println("--------Eliga una opcion--------");
+                    System.out.println("1.Inscribirse en un taller");
+                    System.out.println("2.Consulta sobre 2 tallers");
+                    System.out.println("3.Talleres Previos");
+                    System.out.println("4.Talleres Siguientes");
+                    System.out.println("5.Volver");
+                    System.out.println("6.Salir");
                     var = scan.nextInt();
-
+                    System.out.println("");
                     switch (var) {
                         case 1:
                             gr.menu1(list.get(eleccion), scan);
