@@ -29,6 +29,20 @@ public class Grilla {
         this.dependencias = new ArrayList<>();
     }
 
+    /*----------------------------------------------------------------------------------------*/
+ /*----------------------------------------------------------------------------------------*/
+    /**
+     * addTaller(): Agrega un taller si no existe otro con el mismo nombre.
+     *
+     * @param nombre nombre del taller a agregar
+     * @param horaInicio hora de inicio del taller
+     * @param horaFin hora de finalizacion del taller
+     * @param lugar lugar donde se dicta el taller
+     * @return true si se agrego correctamente, false si ya existia uno con ese
+     * nombre
+     * @author Juan Cruz Zegarra
+     *
+     */
     public boolean addTaller(String nombre, LocalTime horaInicio, LocalTime horaFin, String lugar) {
         if (buscarTallerXNombre(nombre) != null) {
             System.out.println("Ya esta cargado ese taller");
@@ -39,6 +53,17 @@ public class Grilla {
 
     }
 
+    /**
+     * addDependencia(): Agrega una dependencia entre dos talleres si ambos
+     * existen.
+     *
+     * @param one nombre del taller origen
+     * @param two nombre del taller destino
+     * @param distancia distancia entre los dos talleres
+     * @return true si se agrego correctamente, false si alguno de los talleres
+     * no existe
+     * @author Juan Cruz Zegarra
+     */
     public boolean addDependencia(String one, String two, Double distancia) {
         Taller origen = buscarTallerXNombre(one);
         Taller destino = buscarTallerXNombre(two);
@@ -46,7 +71,7 @@ public class Grilla {
             Dependencia depen = new Dependencia(origen, destino, distancia);
             return dependencias.add(depen);
         }
-        
+
         if (origen == null) {
             System.out.println("El taller " + one + " no existe, agregalo");
         }
@@ -135,6 +160,16 @@ public class Grilla {
 
     }
 
+    /**
+     * tallerRequeridoPersona(): Verifica si una persona cumple con los talleres
+     * requeridos antes de hacer uno nuevo.
+     *
+     * @param nombre nombre del taller que se desea realizar
+     * @param person persona que desea realizar el taller
+     * @return true si la persona cumple con todos los talleres requeridos,
+     * false en caso contrario
+     * @author Juan Cruz Zegarra
+     */
     public boolean tallerRequeridoPersona(String nombre, Persona person) {
         if (nombre == null || nombre.equals("")) {
             System.out.println("Tu eleccion es erronea");
@@ -156,6 +191,12 @@ public class Grilla {
         }
     }
 
+    /**
+     * imprimirListaTalleres(): Imprime los nombres de los talleres en la lista.
+     *
+     * @param lista lista de talleres a imprimir
+     * @author Juan Cruz Zegarra
+     */
     public void imprimirListaTalleres(ArrayList<Taller> lista) {
         if (lista == null || lista.isEmpty()) {
             System.out.println("No hay talleres en la lista.");
@@ -167,6 +208,14 @@ public class Grilla {
         }
     }
 
+    /**
+     * talleresRequeridosAntes(): Obtiene la lista de talleres requeridos antes
+     * de uno dado.
+     *
+     * @param nombre nombre del taller a consultar
+     * @return lista de talleres que deben realizarse antes del taller indicado
+     * @author Juan Cruz Zegarra
+     */
     public ArrayList<Taller> talleresRequeridosAntes(String nombre) {
         Taller tal = buscarTallerXNombre(nombre);
 
@@ -202,6 +251,13 @@ public class Grilla {
         resultado.add(taller);
     }
 
+    /**
+     * buscarTallerXNombre(): Busca un taller en la lista por su nombre.
+     *
+     * @param nombre nombre del taller a buscar
+     * @return el taller encontrado o null si no existe
+     * @author Juan Cruz Zegarra
+     */
     private Taller buscarTallerXNombre(String nombre) {
         for (Taller tallere : talleres) {
             if (tallere.getNombre().equals(nombre)) {
@@ -211,6 +267,15 @@ public class Grilla {
         return null;
     }
 
+    /**
+     * buscarArcoXNombre(): Busca una dependencia entre dos talleres
+     * especificos.
+     *
+     * @param one taller origen de la dependencia
+     * @param two taller destino de la dependencia
+     * @return la dependencia encontrada o null si no existe
+     * @author Juan Cruz Zegarra
+     */
     private Dependencia buscarArcoXNombre(Taller one, Taller two) {
         for (Dependencia depen : dependencias) {
             if (depen.getTallerOne().equals(one) && depen.getTallerTwo().equals(two)) {
@@ -220,6 +285,8 @@ public class Grilla {
         return null;
     }
 
+    /*----------------------------------------------------------------------------------------*/
+ /*----------------------------------------------------------------------------------------*/
     public ArrayList<Taller> buscarTalleresSiguientesATaller(Taller tallerInicial) {
         Set<Taller> visitados = new HashSet<>();
         buscarTalleres(tallerInicial, visitados);
@@ -237,19 +304,21 @@ public class Grilla {
             }
         }
     }
-    
+
     /**
-     * Verifica si una persona puede realizar dos talleres en función de sus horarios
-     * y de los requisitos previos necesarios para cada taller.
-     * 
-     * Si los horarios no se superponen y la persona ha cumplido con los requisitos
-     * previos de ambos talleres para ver si puede hacer ambos, uno o ninguno.
+     * Verifica si una persona puede realizar dos talleres en función de sus
+     * horarios y de los requisitos previos necesarios para cada taller.
      *
-     * @param persona    Persona que desea realizar los talleres.
-     * @param nombreOne  Nombre del primer taller.
-     * @param nombreTwo  Nombre del segundo taller.
-     * @return true si puede hacer ambos talleres (en cualquier orden válido), false en caso contrario.
-     * 
+     * Si los horarios no se superponen y la persona ha cumplido con los
+     * requisitos previos de ambos talleres para ver si puede hacer ambos, uno o
+     * ninguno.
+     *
+     * @param persona Persona que desea realizar los talleres.
+     * @param nombreOne Nombre del primer taller.
+     * @param nombreTwo Nombre del segundo taller.
+     * @return true si puede hacer ambos talleres (en cualquier orden válido),
+     * false en caso contrario.
+     *
      * @author Ariel Ismael Miranda Salmin
      */
     public boolean puedeHacerDosActividades(Persona persona, String nombreOne, String nombreTwo) {
@@ -263,77 +332,77 @@ public class Grilla {
         ArrayList<Taller> listaNecesitoTOne = talleresRequeridosAntesSec(tOne.getNombre()); // Talleres que necesito para hacer tOne
         ArrayList<Taller> listaNecesitoTTwo = talleresRequeridosAntesSec(tTwo.getNombre()); // Talleres que necesito para hacer tTwo
         if (tOne.getHoraFin().isBefore(tTwo.getHoraInicio())) {
-            if(person.getTalleres().containsAll(listaNecesitoTOne) && person.getTalleres().containsAll(listaNecesitoTTwo)){
+            if (person.getTalleres().containsAll(listaNecesitoTOne) && person.getTalleres().containsAll(listaNecesitoTTwo)) {
                 System.out.println("Puede hacer ambas actividades");
                 return true;
             }
-            if (person.getTalleres().containsAll(listaNecesitoTOne)){ 
+            if (person.getTalleres().containsAll(listaNecesitoTOne)) {
                 if (!person.getTalleres().contains(tOne)) {
                     person.getTalleres().add(tOne);
                 }
                 if (person.getTalleres().containsAll(listaNecesitoTTwo)) {
                     System.out.println("Puedes hacer el primer taller, y luego hacer el segundo");
                     return true;
-                } else { 
+                } else {
                     System.out.println("Únicamente puede hacer el primer taller");
                     return false;
                 }
-            }else if (person.getTalleres().containsAll(listaNecesitoTTwo)) { 
+            } else if (person.getTalleres().containsAll(listaNecesitoTTwo)) {
                 System.out.println("Puede hacer el segundo taller, pero no el primero");
                 return false;
-            }else{ 
+            } else {
                 System.out.println("No puede hacer ninguno de los dos talleres");
                 return false;
             }
-        } else if (tTwo.getHoraFin().isBefore(tOne.getHoraInicio())){
-            if(person.getTalleres().containsAll(listaNecesitoTOne) && person.getTalleres().containsAll(listaNecesitoTTwo)){
+        } else if (tTwo.getHoraFin().isBefore(tOne.getHoraInicio())) {
+            if (person.getTalleres().containsAll(listaNecesitoTOne) && person.getTalleres().containsAll(listaNecesitoTTwo)) {
                 System.out.println("Puede hacer ambas actividades");
                 return true;
             }
-            if (person.getTalleres().containsAll(listaNecesitoTTwo)){
+            if (person.getTalleres().containsAll(listaNecesitoTTwo)) {
                 if (!person.getTalleres().contains(tTwo)) {
                     person.getTalleres().add(tTwo);
                 }
                 if (person.getTalleres().containsAll(listaNecesitoTOne)) {
-                System.out.println("Puedes hacer el segundo taller, y luego hacer el primero");
-                return true;
-                }else {
+                    System.out.println("Puedes hacer el segundo taller, y luego hacer el primero");
+                    return true;
+                } else {
                     System.out.println("Únicamente puede hacer el segundo taller");
                     return false;
                 }
-                } if (person.getTalleres().containsAll(listaNecesitoTOne)){
-                    System.out.println("Puede hacer el primer taller, pero no el segundo");
-                    return false;
-                }
-                System.out.println("No puede hacer ninguno de los dos talleres");
+            }
+            if (person.getTalleres().containsAll(listaNecesitoTOne)) {
+                System.out.println("Puede hacer el primer taller, pero no el segundo");
                 return false;
             }
-            System.out.println("Los talleres se superponen");
-            if (person.getTalleres().containsAll(listaNecesitoTOne)) {
-                System.out.println(" - Puede hacer el primer taller, pero no el segundo");
-            } else if (person.getTalleres().containsAll(listaNecesitoTTwo)) {
-                System.out.println(" - Puede hacer el segundo taller, pero no el primero");
-            } else {
-                System.out.println(" - No puede hacer ninguno de los dos talleres");
-            }
+            System.out.println("No puede hacer ninguno de los dos talleres");
+            return false;
+        }
+        System.out.println("Los talleres se superponen");
+        if (person.getTalleres().containsAll(listaNecesitoTOne)) {
+            System.out.println(" - Puede hacer el primer taller, pero no el segundo");
+        } else if (person.getTalleres().containsAll(listaNecesitoTTwo)) {
+            System.out.println(" - Puede hacer el segundo taller, pero no el primero");
+        } else {
+            System.out.println(" - No puede hacer ninguno de los dos talleres");
+        }
 
-        
         return false;
     }
 
     /**
-     * Muestra un menú para que el usuario seleccione dos talleres y consulta si la persona
-     * puede realizarlos ambos
+     * Muestra un menú para que el usuario seleccione dos talleres y consulta si
+     * la persona puede realizarlos ambos
      *
      * @param persona Persona que desea consultar sobre los talleres.
-     * @param lista   Lista de talleres disponibles.
-     * @param scan    Objeto Scanner para entrada por teclado.
-     * 
+     * @param lista Lista de talleres disponibles.
+     * @param scan Objeto Scanner para entrada por teclado.
+     *
      * @author Ariel Ismael Miranda Salmin
      */
-    public void caseDos(Persona persona, ArrayList<Taller> lista, Scanner scan){
-        ArrayList <Taller> talleres = new ArrayList<>(lista);
-        if (talleres.size()<2){
+    public void caseDos(Persona persona, ArrayList<Taller> lista, Scanner scan) {
+        ArrayList<Taller> talleres = new ArrayList<>(lista);
+        if (talleres.size() < 2) {
             System.out.println("No hay talleres suficientes para hacer la consulta");
             return;
         }
@@ -341,14 +410,14 @@ public class Grilla {
         Taller[] selec = new Taller[2];
 
         System.out.println("Seleccione dos talleres, para ver si se pueden realizar:");
-        
+
         int resul;
 
         // Seleccionar el primer taller
         do {
             System.out.println("Primer taller: ");
             resul = seleccionarTaller(talleres, scan);
-            if (resul>=0){
+            if (resul >= 0) {
                 selec[0] = talleres.get(resul);
                 talleres.remove(resul);
             }
@@ -363,18 +432,20 @@ public class Grilla {
         do {
             System.out.println("Segundo taller: ");
             resul = seleccionarTaller(talleres, scan);
-            if (resul>=0){
+            if (resul >= 0) {
                 selec[1] = talleres.get(resul);
                 talleres.remove(resul);
             }
-        } while (resul == -2 || resul !=-1);
+        } while (resul == -2 || resul != -1);
 
         if (Objects.nonNull(selec[1])) {
             puedeHacerDosActividades(persona, selec[0].getNombre(), selec[1].getNombre());
-        }else{
+        } else {
             System.out.println("Se cancelara la seleccion");
         }
-    };
+    }
+
+    ;
 
 
     /**
@@ -386,19 +457,19 @@ public class Grilla {
      * 
      * @author Ariel Ismael Miranda Salmin
      */
-    public int seleccionarTaller(ArrayList<Taller> lista, Scanner scan){
+    public int seleccionarTaller(ArrayList<Taller> lista, Scanner scan) {
         try {
             int i = 0;
             for (Taller taller : lista) {
-                System.out.println(i+"_ "+ taller.toString());
+                System.out.println(i + "_ " + taller.toString());
                 i++;
             }
-            System.out.println(i+"_ Salir");
+            System.out.println(i + "_ Salir");
             int valor = Integer.parseInt(scan.nextLine());
             if (valor > i || valor < 0) {
                 System.out.println("Seleccione una de las opciones");
                 return -2;
-            } else if (valor==i){
+            } else if (valor == i) {
                 return -1;
             } else {
                 return valor;
@@ -407,7 +478,9 @@ public class Grilla {
             System.out.println("No es un número válido.");
             return -2;
         }
-    };
+    }
+
+    ;
 
 
 
@@ -427,7 +500,6 @@ public class Grilla {
         resultado.remove(tal);  // Asegura que no incluya el mismo taller
         return resultado;
     }
-
 
     private void auxRecuTRASec(Taller taller, HashSet<String> visitados, ArrayList<Taller> resultado) {
         if (visitados.contains(taller.getNombre())) {
@@ -452,7 +524,10 @@ public class Grilla {
         return dependencias;
     }
 
-    /** Menu para seleccionar un taller y a partir de ese taller ver que mas se puede hacer **/
+    /**
+     * Menu para seleccionar un taller y a partir de ese taller ver que mas se
+     * puede hacer *
+     */
     public void menu4(Scanner scan) {
         System.out.println("Elegi un taller");
         int i = 0;
@@ -477,10 +552,8 @@ public class Grilla {
         Taller elegido = talleres.get(eleccion);
 
         System.out.println("A partir de este taller " + elegido.getNombre() + " usted puede hacer estos:");
-        ArrayList<Taller> siguientes =  buscarTalleresSiguientesATaller(elegido);
+        ArrayList<Taller> siguientes = buscarTalleresSiguientesATaller(elegido);
         imprimirListaTalleres(siguientes);
     }
-
-
 
 }
