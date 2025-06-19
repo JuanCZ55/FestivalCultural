@@ -105,7 +105,8 @@ public class Menu {
      *
      * @author Ariel Ismael Miranda Salmin
      */
-    public int seleccionarPersona(ArrayList<Persona> list, Scanner scan) {
+    public int seleccionarPersona(ArrayList<Persona> list, Scanner scane) {
+        Scanner scan=new Scanner(System.in);
         try {
             int i = 0;
             for (Persona persona : list) {
@@ -130,7 +131,9 @@ public class Menu {
 
     ;
 
-  public void caseCuatro(Grilla grilla, Scanner scan) {
+  public void caseCuatro(Grilla grilla, Scanner scane) {
+              Scanner scan=new Scanner(System.in);
+
         if (grilla.getTalleres().size() < 1) {
             System.out.println("No hay talleres para eliminar");
         }
@@ -190,7 +193,9 @@ public class Menu {
 
     ;
 
-  public void caseSeis(Grilla grilla, Scanner scan) {
+  public void caseSeis(Grilla grilla, Scanner scane) {
+              Scanner scan=new Scanner(System.in);
+
         if (grilla.getDependencias().size() < 1) {
             System.out.println("No hay dependencias para eliminar");
         }
@@ -249,7 +254,9 @@ public class Menu {
         list.add(perso);
     }
 
-    public void agregarTaller(Grilla gr, Scanner scanner) {
+    public void agregarTaller(Grilla gr, Scanner scan) {
+                Scanner scanner=new Scanner(System.in);
+
         System.out.println("Ingrese un nombre para taller");
         String nombre = scanner.nextLine();
         System.out.println("Ingrese un lugar");
@@ -288,7 +295,8 @@ public class Menu {
         }
     }
 
-    public void agregarDependencia(Grilla gr, Scanner scan) {
+    public void agregarDependencia(Grilla gr, Scanner scane) {
+        Scanner scan=new Scanner(System.in);
 
         String one, two;
         Double distancia;
