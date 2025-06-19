@@ -241,10 +241,12 @@ public class Menu {
     ;
 
   public void agregarPersona(ArrayList<Persona> list, Scanner scan) {
+      Scanner scane=new Scanner(System.in);
         System.out.println("Ingrese un nombre");
-        String nombre = scan.nextLine();
+        String nombre;
+        nombre = scane.nextLine();
         Persona perso = new Persona(nombre);
-
+        list.add(perso);
     }
 
     public void agregarTaller(Grilla gr, Scanner scanner) {
